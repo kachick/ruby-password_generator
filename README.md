@@ -21,13 +21,16 @@ Usage
 ```ruby
 require 'password_generator'
 
-
+p PasswordGenerator.generate(8)
+p PasswordGenerator.generate(24, avoid_symbols: true)
+p PasswordGenerator.generate(24, avoid_downcases: true)
+p PasswordGenerator.generate(24, avoid_uppercases: true)
 ```
 
 Requirements
 -------------
 
-* Ruby - [1.9.2 or later](http://travis-ci.org/#!/kachick/ruby-password_generator)
+* Ruby - [1.9.3 or later](http://travis-ci.org/#!/kachick/ruby-password_generator)
 
 Install
 -------

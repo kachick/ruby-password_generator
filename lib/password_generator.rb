@@ -1,4 +1,5 @@
 # coding: us-ascii
+# password_generator - A generator of daily passwords
 # Copyright (c) 2013 Kenichi Kamiya
 
 require 'securerandom'
@@ -24,7 +25,7 @@ module PasswordGenerator
       opt :avoid_whitespace, default: true, condition: BOOLEAN?
     }
 
-    # @param length [Fixnum]
+    # @param length [Fixnum, #to_int]
     # @param options [Hash]
     # @option options [Boolean] :avoid_downcases
     # @option options [Boolean] :avoid_uppercases
@@ -33,6 +34,10 @@ module PasswordGenerator
     # @option options [Boolean] :avoid_whitespace
     # @return [String]
     def generate(length, options={})
+      length = length.to_int
+      unless length >= 1
+        raise ArgumentError, "too small length thrown: #{length.inspect}"
+      end
       options = GENERATE_OptArg.parse options
       chars = characters_for(options).freeze
 

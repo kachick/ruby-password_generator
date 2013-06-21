@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.name          = 'password_generator'
   gem.version       = PasswordGenerator::VERSION.dup
 
-  gem.required_ruby_version = '>= 1.9.2'
+  gem.required_ruby_version = '>= 1.9.3'
 
   gem.add_runtime_dependency 'optionalargument', '~> 0.1'
 
