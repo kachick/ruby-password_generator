@@ -7,7 +7,7 @@ ruby-password_generator
 Description
 -----------
 
-A generator for daily passwords
+A generator of daily passwords
 
 Features
 --------
