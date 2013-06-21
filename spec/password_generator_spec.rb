@@ -1,4 +1,4 @@
-# coding: utf-8
+# coding: us-ascii
 
 require_relative 'spec_helper'
 
