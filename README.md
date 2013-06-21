@@ -36,7 +36,7 @@ Install
 -------
 
 ```bash
-gem install ruby-password_generator
+gem install password_generator
 ```
 
 Link
