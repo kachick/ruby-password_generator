@@ -2,7 +2,7 @@
 # password_generator - A generator of daily passwords
 # Copyright (c) 2013 Kenichi Kamiya
 
-require 'securerandom'
+require 'securerandom' # Don't consider unsupported SecureRandom
 require 'optionalargument'
 
 require_relative 'password_generator/version'
@@ -15,15 +15,58 @@ module PasswordGenerator
   SYMBOLS = [*'!'..'/', *':'..'@', *'['..'`', *'{'..'~'].each(&:freeze).freeze
   WHITESPACE = ' '.freeze
 
-  class << self
+  GENERATE_OptArg = OptionalArgument.define {
+    opt :avoid_downcases, default: false, condition: BOOLEAN?
+    opt :avoid_uppercases, default: false, condition: BOOLEAN?
+    opt :avoid_numbers, default: false, condition: BOOLEAN?
+    opt :avoid_symbols, default: false, condition: BOOLEAN?
+    opt :avoid_whitespace, default: true, condition: BOOLEAN?
+  }
 
-    GENERATE_OptArg = OptionalArgument.define {
-      opt :avoid_downcases, default: false, condition: BOOLEAN?
-      opt :avoid_uppercases, default: false, condition: BOOLEAN?
-      opt :avoid_numbers, default: false, condition: BOOLEAN?
-      opt :avoid_symbols, default: false, condition: BOOLEAN?
-      opt :avoid_whitespace, default: true, condition: BOOLEAN?
-    }
+  class Generator
+
+    attr_reader :length, :options, :letters
+
+    # @param length [Fixnum]
+    # @param options [GENERATE_OptArg]
+    def initialize(length, options)
+      @length, @options = length, options
+      @letters = generate_letters.freeze
+    end
+
+    # @return [String]
+    def generate
+      llen = letters.length
+
+      # `Array#sample` accepts random generator.
+      # But the feature/syntax makes my anxiety :(
+      length.times.map{letters.fetch(SecureRandom.random_number(llen))}.join
+    end
+
+    private
+
+    # @return [Array<String>]
+    def generate_letters
+      [].tap {|list|
+        list.concat(DOWNCASES) unless options.avoid_downcases
+        list.concat(UPPERCASES) unless options.avoid_uppercases
+        list.concat(NUMBERS) unless options.avoid_numbers
+        list.concat(SYMBOLS) unless options.avoid_symbols
+        list.push(WHITESPACE) unless options.avoid_whitespace
+
+        unless list.length >= 2
+          raise ArgumentError, "using letter-list is too short: #{list.inspect}"
+        end
+      }
+    end
+
+  end
+
+  if respond_to? :private_constant
+    private_constant :Generator
+  end
+
+  class << self
 
     # @param length [Fixnum, #to_int]
     # @param options [Hash]
@@ -39,32 +82,8 @@ module PasswordGenerator
         raise ArgumentError, "too small length thrown: #{length.inspect}"
       end
       options = GENERATE_OptArg.parse options
-      chars = characters_for(options).freeze
 
-      charlen = chars.length
-
-      # `Array#sample` accepts random generator via optional-argument.
-      # But the feature/syntax makes my anxiety :(
-      length.times.map{chars.fetch(SecureRandom.random_number(charlen))}.join
-    end
-
-    private
-
-    # @param options [GENERATE_OptArg]
-    # @return [Array<String>]
-    def characters_for(options)
-      chars = []
-      chars.concat(DOWNCASES) unless options.avoid_downcases
-      chars.concat(UPPERCASES) unless options.avoid_uppercases
-      chars.concat(NUMBERS) unless options.avoid_numbers
-      chars.concat(SYMBOLS) unless options.avoid_symbols
-      chars.push(WHITESPACE) unless options.avoid_whitespace
-
-      unless chars.length >= 2
-        raise ArgumentError, "using character-list is too short: #{chars.inspect}"
-      end
-
-      chars
+      Generator.new(length, options).generate
     end
 
   end
