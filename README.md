@@ -30,7 +30,7 @@ p PasswordGenerator.generate(24, avoid_uppercases: true)
 Requirements
 -------------
 
-* Ruby - [1.9.3 or later](http://travis-ci.org/#!/kachick/ruby-password_generator)
+* Ruby - [2.5 or later](http://travis-ci.org/#!/kachick/ruby-password_generator)
 
 Install
 -------
