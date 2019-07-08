@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.name          = 'password_generator'
   gem.version       = PasswordGenerator::VERSION.dup
 
-  gem.add_runtime_dependency 'optionalargument', '~> 0.1'
+  gem.add_runtime_dependency 'optionalargument', '~> 0.3'
 
   gem.add_development_dependency 'rspec', '>= 3.8', '< 4'
   gem.add_development_dependency 'yard', '>= 0.9.20', '< 2'
