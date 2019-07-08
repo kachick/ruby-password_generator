@@ -22,7 +22,7 @@ describe PasswordGenerator do
         end
 
         it "is not frozen" do
-          expect(PasswordGenerator.generate(1).frozen?).to be_false
+          expect(PasswordGenerator.generate(1).frozen?).to eq(false)
         end
       end
 
